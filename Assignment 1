@@ -1,0 +1,54 @@
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import java.util.List;
+
+public class Assignment1Test {
+
+    WebDriver driver;
+
+    @BeforeTest
+    public void setup() {
+        // Set up WebDriver (you may need to download ChromeDriver and set its path)
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver.exe");
+        driver = new ChromeDriver();
+        // Navigate to the URL
+        driver.get("https://basecopy5.staging.pg-test.com/");
+        // Add code for signing up
+    }
+
+    @Test
+    public void testSendMessageAndVerify() {
+        // 1. Home > Career > Jobs
+        // Implement code to navigate to Jobs
+
+        // 2. Click on any job and message any recommended user
+        // Implement code to click on a job and send a message to a recommended user
+
+        // 3. Navigate to your inbox
+        // Implement code to navigate to the inbox
+
+        // 4. Verify the message sent is listed under your user's chat
+        // Implement code to verify the sent message
+
+        // 5. Navigate to User2's profile
+        // Implement code to navigate to User2's profile
+
+        // 6. Print all user names and company names under "Others Similar to <User2>"
+        List<WebElement> similarUsers = driver.findElements(By.xpath("//div[@class='similar-user']"));
+        for (WebElement user : similarUsers) {
+            String userName = user.findElement(By.xpath(".//span[@class='user-name']")).getText();
+            String companyName = user.findElement(By.xpath(".//span[@class='company-name']")).getText();
+            System.out.println("User Name: " + userName);
+            System.out.println("Company Name: " + companyName);
+        }
+    }
+
+    @AfterTest
+    public void teardown() {
+        // Quit the WebDriver
+        driver.quit();
+    }
+}
