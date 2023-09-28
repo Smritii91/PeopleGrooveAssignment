@@ -1,0 +1,71 @@
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Assignment2Test {
+
+    WebDriver driver;
+
+    @BeforeTest
+    public void setup() {
+        // Set up WebDriver (you may need to download ChromeDriver and set its path)
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver.exe");
+        driver = new ChromeDriver();
+        // Navigate to the URL
+        driver.get("https://basecopy5.staging.pg-test.com/");
+        // Add code for login (if not already logged in)
+    }
+
+    @Test
+    public void testCareerPaths() {
+        // 1. Home > Career > Career Paths
+        // Implement code to navigate to Career Paths
+        driver.findElement(By.xpath("//a[text()='Career Paths']")).click();
+
+        // 2. Click on any 3 career paths from "Inspiration from You" section
+        List<WebElement> careerPaths = driver.findElements(By.xpath("//div[@class='career-path']"));
+        List<String> selectedPaths = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            WebElement path = careerPaths.get(i);
+            String pathName = path.findElement(By.xpath(".//h3")).getText();
+            selectedPaths.add(pathName);
+            path.click();
+        }
+
+        // 3. Store name in collections (you can use ArrayList for this)
+
+        // 4. Career Stage section -> Make sure option 3 is pre-selected (if not, select it)
+        WebElement careerStageOption = driver.findElement(By.xpath("//select[@id='career-stage']"));
+        if (!careerStageOption.getAttribute("value").equals("3")) {
+            careerStageOption.sendKeys("3");
+        }
+
+        // 5. Go back to the homepage and refresh
+        driver.navigate().back();
+        driver.navigate().refresh();
+
+        // 6. Verify "Recently viewed careers" list is reversed compared to step 2
+        List<WebElement> viewedCareers = driver.findElements(By.xpath("//div[@class='career-path']"));
+        List<String> reversedPaths = new ArrayList<>();
+        for (int i = viewedCareers.size() - 1; i >= 0; i--) {
+            String pathName = viewedCareers.get(i).findElement(By.xpath(".//h3")).getText();
+            reversedPaths.add(pathName);
+        }
+
+        // Compare selectedPaths with reversedPaths to ensure they are reversed
+        assert selectedPaths.equals(reversedPaths);
+    }
+
+    @AfterTest
+    public void teardown() {
+        // Quit the WebDriver
+        driver.quit();
+    }
+}
